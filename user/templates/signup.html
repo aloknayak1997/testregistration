@@ -1,0 +1,89 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+    body{
+        overflow:hidden;
+        width: 100%;
+        height: 100%;
+    }
+    .signup {
+    margin: 25% 41%;
+    padding: 5% 34px;
+    background: #afadad;
+    border-radius:  17px;
+}
+.inputs {
+    margin:  11% 0 0 -6px;
+}
+
+input {
+    padding: 8px;
+    border-radius: 10px;
+    border: none;
+}
+div#submit {
+    margin: 22% 0 0 55%;
+    background:  black;
+    padding:  12px;
+    color:  #fff;
+}
+</style>
+<div class="signup">
+    <span>Sign-Up</span>
+    <div class="inputs">
+        <input id="username" type="text" placeholder="username"/>
+    </div>
+    <div class="inputs">
+        <input id="mobile" type="number" maxlength="10" placeholder="mobile number"/>
+    </div>
+
+    <div id="submit">Join us</div>
+</div>
+<script>
+
+    var getCookie = function(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    };
+   
+    $('#submit').click(function(){
+        var username = $('#username').val();
+        var mobile = $('#mobile').val();
+        if(username!='' && mobile!=''){
+            console.log(mobile.length);
+            if(mobile.length>10){alert('mobile number cannot be greater than 10');}
+            else{
+                $.ajax({
+                        url: "{% url 'user:signup' %}",
+                        type: 'POST',
+                        headers: { "X-CSRFToken": getCookie("csrftoken") },
+                        data: {
+                           'username':username,
+                           'mobile':mobile
+                        },
+                          success: function (response) {
+                            console.log(response);
+                           alert("Successfully Added fee !");
+                        },
+                        error: function (response){
+                            alert("error occurred");
+                            console.log(response);
+                        },
+                      });//End of ajax request   
+            } 
+        }
+        else{
+            alert('enter all details');
+        }
+    });
+</script>
